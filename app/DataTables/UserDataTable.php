@@ -15,7 +15,9 @@ class UserDataTable extends DataTable
 {
 
     protected $tableId;
+    protected $paginationType;
     protected $defaultPageLength;
+    protected $pageLengthMenuWithLables;
     protected $createRoute;
     protected $rowActionView;
     protected $excludeColumnsFromExcelExportTitles;
@@ -28,7 +30,9 @@ class UserDataTable extends DataTable
     {
         $this->createRoute = route('users.create');
         $this->tableId = 'user-table';
-        $this->defaultPageLength = 15;
+        $this->paginationType = 'simple'; // simple, simple_numbers, full, full_numbers
+        $this->defaultPageLength = 5;
+        $this->pageLengthMenuWithLables = [[5, 10, 15, 25, 50, 100, -1], [5, 10, 15, 25, 50, 100, 'All']];
         $this->rowActionView = 'users.action';
         $this->excludeColumnsFromExcelExportTitles = ['Action', ''];
         $this->excludeColumnsFromPdfExportTitles = ['Action', ''];
@@ -46,7 +50,7 @@ class UserDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return view($this->rowActionView, compact('row'))->render();
+                return $this->renderActions($row->id);
             });
     }
 
@@ -86,7 +90,7 @@ class UserDataTable extends DataTable
             ->colReorder(true)
             ->rowReorder(true)
             ->autoWidth(true)
-            ->lengthMenu([[5, 10, 15, 25, 50, 100, -1], [5, 10, 15, 25, 50, 100, 'All']])
+            ->lengthMenu($this->pageLengthMenuWithLables)
             ->lengthChange(true)
             ->pageLength($this->defaultPageLength)
             ->orderBy([2, 'asc'])
@@ -230,7 +234,6 @@ class UserDataTable extends DataTable
     private function getLayout(): Layout
     {
         return Layout::make([
-
             'topStart' => 'buttons',
             'topEnd' => [
                 'search' => [
@@ -252,7 +255,7 @@ class UserDataTable extends DataTable
             'bottomEnd' => [
                 'paging' => [
                     'buttons' => 5,
-                    'type' => 'simple'
+                    'type' => $this->paginationType,
                 ]
             ],
         ]);
@@ -286,5 +289,15 @@ class UserDataTable extends DataTable
     {
         $excluded = array_map(fn($column) => 'title="' . $column . '"', $columns);
         return ':visible:not([' . implode(']):not([', $excluded) . '])';
+    }
+
+    public function renderActions($id)
+    {
+        $routes = [
+            ['route' => 'users.edit', 'icon' => 'fas fa-edit', 'class' => 'btn-primary', 'method' => 'GET' , 'onClick' => false, 'onClickMessage' => ''],
+            ['route' => 'users.destroy', 'icon' => 'fas fa-trash-alt', 'class' => 'btn-danger', 'method' => 'DELETE' ,'onClick' => true, 'onClickMessage' => 'Are you sure you want to delete this user?'],
+        ];
+
+        return view('users.action', compact('routes', 'id'));
     }
 }
