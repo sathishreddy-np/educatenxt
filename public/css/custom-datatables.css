@@ -1,0 +1,7 @@
+/* public/css/custom-datatables.css */
+table.dataTable tbody tr.selected,
+table.dataTable tbody th.selected,
+table.dataTable tbody td.selected {
+    background-color: transparent !important;
+    color: inherit !important;
+}

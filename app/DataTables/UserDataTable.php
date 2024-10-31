@@ -70,6 +70,7 @@ class UserDataTable extends DataTable
         return $this->builder()
             ->addTableClass('table table-bordered table-striped table-hover table-responsive shadow-lg')
             ->setTableId($this->tableId)
+            ->rowId('id')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->destroy(true)
@@ -95,11 +96,12 @@ class UserDataTable extends DataTable
             ->pageLength($this->defaultPageLength)
             ->orderBy([2, 'asc'])
             ->orderMulti(true)
-            ->selectSelector('td:first-child')
+            // ->selectSelector('td:first-child')
             ->selectStyleMultiShift()
+            ->selectClassName('selected bg-secondary')
             ->selectInfo(true)
             ->selectItemsRow()
-            ->stateSave(false)
+            ->stateSave(true)
             ->buttons($this->getButtons())
             ->columnDefs([
                 // Checkbox Column
@@ -295,8 +297,8 @@ class UserDataTable extends DataTable
     public function renderActions($id)
     {
         $routes = [
-            ['route' => 'users.edit', 'icon' => 'fas fa-edit', 'class' => 'btn-outline-primary', 'method' => 'GET' , 'onClick' => false, 'onClickMessage' => ''],
-            ['route' => 'users.destroy', 'icon' => 'fas fa-trash-alt', 'class' => 'btn-outline-danger', 'method' => 'DELETE' ,'onClick' => true, 'onClickMessage' => 'Are you sure you want to delete this user?'],
+            ['route' => 'users.edit', 'icon' => 'fas fa-edit', 'class' => 'btn-outline-primary', 'method' => 'GET', 'onClick' => false, 'onClickMessage' => ''],
+            ['route' => 'users.destroy', 'icon' => 'fas fa-trash-alt', 'class' => 'btn-outline-danger', 'method' => 'DELETE', 'onClick' => true, 'onClickMessage' => 'Are you sure you want to delete this user?'],
         ];
 
         return view('users.action', compact('routes', 'id'));
