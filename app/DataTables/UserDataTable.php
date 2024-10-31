@@ -247,6 +247,7 @@ class UserDataTable extends DataTable
                         'titleAttr' => 'Columns Visibility',
                         'className' => 'btn btn-sm',
                         'postfixButtons' => ['colvisRestore'],
+                        'columns' => ':not(:first-child)',
                     ],
 
                 ],
@@ -294,8 +295,8 @@ class UserDataTable extends DataTable
     public function renderActions($id)
     {
         $routes = [
-            ['route' => 'users.edit', 'icon' => 'fas fa-edit', 'class' => 'btn-primary', 'method' => 'GET' , 'onClick' => false, 'onClickMessage' => ''],
-            ['route' => 'users.destroy', 'icon' => 'fas fa-trash-alt', 'class' => 'btn-danger', 'method' => 'DELETE' ,'onClick' => true, 'onClickMessage' => 'Are you sure you want to delete this user?'],
+            ['route' => 'users.edit', 'icon' => 'fas fa-edit', 'class' => 'btn-outline-primary', 'method' => 'GET' , 'onClick' => false, 'onClickMessage' => ''],
+            ['route' => 'users.destroy', 'icon' => 'fas fa-trash-alt', 'class' => 'btn-outline-danger', 'method' => 'DELETE' ,'onClick' => true, 'onClickMessage' => 'Are you sure you want to delete this user?'],
         ];
 
         return view('users.action', compact('routes', 'id'));
